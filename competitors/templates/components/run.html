@@ -1,0 +1,436 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block nav_bar %}
+  <!-- BEGIN Nav -->
+  <ul class="nav nav-pills">
+    <li class="nav-item">
+      <a href="{% url 'competitors:index' %}" class="nav-link active" id="test">Run</a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'competitors:results' %}" class="nav-link">Results</a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'competitors:setup' %}" class="nav-link">Setup</a>
+    </li>
+  </ul>
+  <!-- END Nav -->
+{% endblock %}
+
+{% block nav_bar_wrap %}
+  <!-- BEGIN Nav -->
+  <ul class="nav nav-pills">
+    <li class="nav-item">
+      <a href="{% url 'competitors:index' %}" class="nav-link active">Run</a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'competitors:results' %}" class="nav-link">Results</a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'competitors:setup' %}" class="nav-link">Setup</a>
+    </li>
+  </ul>
+  <!-- END Nav -->
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row portlet-row-fill-md">
+    <div class="col-md-12 col-xl-12">
+      <!-- BEGIN Portlet -->
+      <div class="portlet portlet-primary">
+        <div class="portlet-body">
+          <!-- BEGIN Portlet -->
+          <div class="portlet mb-2">
+            <div class="row portlet-body">
+              <!-- BEGIN Form -->
+              <div class="col-md-12 col-xl-12">
+                <div class="row col-md-12" style="margin:0">
+                  <div class="col-md-9 col-xl-9">
+                    <div class="portlet-row-fill-xl">
+                      <form id="form1" action="" method="POST" onsubmit="save_competitor(); return false;">
+                        {% csrf_token %}
+                        <div class="row">
+                          <div class="col-md-4 col-xl-4" style="display:flex; align-items:center">
+                            <div class="row">
+                              <div class="form-group col-md-6 col-xl-6">
+                                <div class="row">
+                                  <label class="col-md-4 col-xl-4"><h5 class="widget8">#</h5></label>
+                                  <div class="col-md-8 col-xl-8">
+                                    <!-- BEGIN Input Group -->
+                                    <div class="input-group">
+                                      <input type="number" onKeyPress="if(this.value.length==3) return false;" class="form-control text-primary" style="font-size: 26px; padding:0; font-weight: bold; max-width: 100px;" id="competitor_no" name="competitor_no" onkeyup="onCompetitorNoChange(this);" onchange="onCompetitorNoChange(this);" required />
+                                    </div>
+                                    <!-- END Input Group -->
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="form-group col-md-6 col-xl-6">
+                                <div class="row">
+                                  <label class="col-md-4 col-xl-4">
+                                      <h5 class="widget8 mb-0">KG</h5>
+                                  </label>
+                                  <div class="col-md-8 col-xl-8">
+                                    <!-- BEGIN Input Group -->
+                                    <div class="input-group">
+                                      <input type="text" maxlength="5" onkeypress="return event.charCode >= 48 && event.charCode <= 57" class="form-control text-primary" style="max-width: 120px; font-size: 26px; padding:0; font-weight: bold;" id="competitor_weight" name="competitor_weight" required/>
+                                    </div>
+                                    <!-- END Input Group -->
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-8 col-xl-8">
+                            <div class="row col-md-12">
+                              <div class="col-md-6 col-xl-6">
+                                <!-- BEGIN Form Group -->
+                                <div class="form-group row">
+                                  <label class="col-sm-3 col-form-label col-form-label-lg">Name</label>
+                                  <div class="col-sm-9">
+                                    <!-- BEGIN Input Group -->
+                                    <div class="input-group">
+                                      <input type="text" class="form-control form-control-lg" placeholder="Competitor Name" id="competitor_name" name="competitor_name" required>
+                                    </div>
+                                    <!-- END Input Group -->
+                                  </div>
+                                </div>
+                                <!-- END Form Group -->
+                                <!-- BEGIN Form Group -->
+                                <div class="form-group row">
+                                  <label for="tractor_name" class="col-sm-3 col-form-label col-form-label-lg">Tractor</label>
+                                  <div class="col-sm-9">
+                                    <!-- BEGIN Input Group -->
+                                    <div class="input-group-icon">
+                                      <input type="text" class="form-control form-control-lg" placeholder="Tractor Name" id="tractor_name" name="tractor_name" >
+                                    </div>
+                                    <!-- END Input Group -->
+                                  </div>
+                                </div>
+                                <!-- END Form Group -->
+                              </div>
+                              <div class="col-md-6 col-xl-6">
+                                <!-- BEGIN Form Group -->
+                                <div class="form-group row">
+                                  <label for="clasS" class="col-sm-3 col-form-label col-form-label-lg">Class</label>
+                                  <div class="col-sm-9">
+                                    <select class="form-control form-control-lg" id="clasS" name="clasS" onchange="onClassNameChange(this)">
+                                      {% for class in classes %}
+                                        <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                      {% endfor %}
+                                    </select>
+                                  </div>
+                                </div>
+                                <!-- END Form Group -->
+                                <div class="float-right">
+                                  <button type="submit" class="btn btn-lg btn-primary">Save</button>
+                                  <button type="reset" class="btn btn-lg btn-secondary" id="reset_btn" onclick="reset_clicked()">Reset</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-xl-3">
+                    <div class="row">
+                      <div class="col-sm-12" style="margin:0; display:flex; flex-direction:row">
+                        <h3 class="col-sm-7" style="display: flex;align-items: center;margin-bottom: 0;font-size: 12px;">Pull Factor(%)</h3>
+                        <div class="col-sm-5">
+                          <input type="number" form="form1" onKeyPress="if(this.value.length==2) return false;" class="form-control text-primary" style="font-size: 20px; font-weight: bold; padding:0; margin: 0;" id="pull_factor" name="pull_factor" required>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-xl-12" style="margin:0">
+                        <!-- BEGIN Widget -->
+                        <div class="widget8">
+                          <div class="widget8-content" style="width:100%; margin-bottom:0; padding:10px 0">
+                            <div class="form-group" style="width:100%; margin-bottom: 0; display:flex; flex-direction:row; gap:10px">
+                              <button form="form1" type="button" class="btn btn-block btn-lg btn-primary" style="min-height: 34px; height: 34px; margin-top: 0;" id="ready_btn" onclick="send_ready_to_server()" disabled>Ready
+                                <div class="btn-marker">
+                                {% if connection == 'Connected' %}
+                                  <i class="marker marker-dot text-success"></i>
+                                {% else %}
+                                  <i class="marker marker-dot text-danger"></i>
+                                {% endif %}
+                              </div>
+                              </button>
+                              <button form="form1" type="button" class="btn btn-block btn-lg btn-primary" style="min-height: 34px; height: 34px; margin-top:0;" id="accept_btn" onclick="save_result()" disabled>Accept</button>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- END Widget -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 col-xl-12">
+                <div class="row">
+                  <div class="col-md-6 col-xl-6" style="display:flex; align-items:flex-end;">
+                    <div class="portlet-row-fill-xl">
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <div class="portlet">
+                            <div class="portlet-header">
+                              <h3 class="portlet-title" style="font-size: 20px;">Distance</h3>
+                            </div>
+                            <div class="portlet-body">
+                              <!-- BEGIN Widget -->
+                              <div class="widget8">
+                                <h4 class="widget8-highlight widget8-highlight-lg text-info" id="competitor-running-distance">0</h4>
+                                <h5>&nbsp;Mtrs</h5>
+                              </div>
+                              <!-- END Widget -->
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <div class="portlet">
+                            <div class="portlet-header">
+                              <h3 class="portlet-title" style="font-size: 20px;">Speed</h3>
+                            </div>
+                            <div class="portlet-body">
+                              <!-- BEGIN Widget -->
+                              <div class="widget8">
+                                <h4 class="widget8-highlight widget8-highlight-lg text-primary" id="competitor-running-speed">0</h4>
+                                <h5>&nbsp;Km/Hr</h5>
+                              </div>
+                              <!-- END Widget -->
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <div class="portlet">
+                            <div class="portlet-header">
+                              <h3 class="portlet-title" style="font-size: 20px;">Weight</h3>
+                            </div>
+                            <div class="portlet-body">
+                              <!-- BEGIN Widget -->
+                              <div class="widget8">
+                                <h4 class="widget8-highlight widget8-highlight-lg text-danger" id="competitor-running-weight">0</h4>
+                                <h5>&nbsp;Kg</h5>
+                              </div>
+                              <!-- END Widget -->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-xl-6">
+                    <div class="row portlet-row-fill-xl">
+                      <div class="col-xl-12">
+                        <div class="portlet">
+                          <div class="portlet-body">
+                            <!-- BEGIN Table -->
+                            <table class="table table-bordered table-striped table-hover mb-0" id="table_for_competitor">
+                              <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th>Name</th>
+                                  <th>PF</th>
+                                  <th>Weight</th>
+                                  <th>Distance</th>
+                                  <th>Date</th>
+                                  <th>Time</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <th scope="row">1</th>
+                                  <td>-----</td>
+                                  <td>-----</td>
+                                  <td>-----</td>
+                                  <td>-----</td>
+                                  <td>-----</td>
+                                  <td>-----</td>
+                                </tr>
+                                <tr>
+                                  <th scope="row">2</th>
+                                  <td>-----</td>
+                                  <td>-----</td>
+                                  <td>-----</td>
+                                  <td>-----</td>
+                                  <td>-----</td>
+                                  <td>-----</td>
+                                </tr>
+                                <tr>
+                                  <th scope="row">3</th>
+                                  <td>-----</td>
+                                  <td>-----</td>
+                                  <td>-----</td>
+                                  <td>-----</td>
+                                  <td>-----</td>
+                                  <td>-----</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                            <!-- END Table -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- END Form -->
+            </div>
+          </div>
+          <!-- END Portlet -->
+        </div>
+      </div>
+      <div class="row portlet-row-fill-xl">
+        <div class="col-md-12 col-xl-12">
+          <div class="row">
+            <div class="col-md-6 col-xl-6 portlet">
+              <div class="portlet-header portlet-header-bordered">
+                <h3 class="portlet-title">Last 5 Runs for Current Class</h3>
+              </div>
+              <div class="portlet-body">
+                <!-- BEGIN Table -->
+                <table class="table table-bordered table-striped table-hover mb-0" id="table_for_class">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Name</th>
+                      <th>Pull Factor</th>
+                      <th>Weight</th>
+                      <th>Distance</th>
+                      <th>Date</th>
+                      <th>Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">1</th>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">2</th>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">3</th>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">4</th>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">5</th>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                      <td>-----</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!-- END Table -->
+              </div>
+            </div>
+            <div class="col-md-6 col-xl-6">
+              <div class="portlet">
+                <form id="form2" style="padding:15px" action="" method="POST" onsubmit="send_msg_to_screen(); return false;">
+                  {% csrf_token %}
+                  <div class="form-group row" style="margin-bottom:0">
+                      <input type="text" class="form-control form-control-lg col-sm-8" placeholder="Post to screen" id="msg" name="msg" required>
+                      <div class="col-sm-4" style="display:flex; flex-direction:row; gap:5px">
+                        <button type="submit" class="btn btn-lg" style="color:#fff; background-color:#0c83e2">Post</button>
+                        <button type="reset" class="btn btn-lg btn-secondary">Clear</button>
+                      </div>
+                  </div>
+                </form>
+              </div>
+              <div class="portlet" style="display:flex; padding:10px">
+                <div class="row" style="display:flex; align-items:center">
+                  <div class="col-md-6 col-xl-6" style="background-color:#0c83e2; padding-left:10px; display:flex; align-items:center;border-radius: 5px; height:fit-content">
+                    <div class="portlet-icon" style="color:#fff">
+                      <i class="fa fa-tractor"></i>
+                    </div>
+                    <h3 class="portlet-title" style="color:#fff">Competitor info</h3>
+                  </div>
+                  <ul class="nav nav-pills col-md-6 col-xl-6" style="padding:10px">
+                    <li class="nav-item">
+                      <a href="{% url 'competitors:index' %}" class="nav-link active" id="test">Run</a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="{% url 'competitors:results' %}" class="nav-link">Results</a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="{% url 'competitors:setup' %}" class="nav-link">Setup</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- END Portlet -->
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="{% static 'assets/js/run.js' %}"></script>
+<script>
+window.onload = function() {
+  window.connection = "{{ connection }}";
+
+  {% for class in classes %}
+    window.classes["{{ class.class_name }}"] = "{{ class.pull_factor }}";
+  {% endfor %}
+
+  {% for competitor in competitors %}
+    window.competitors["{{ competitor.competitor_no }}"] = {
+      'competitor_name': '{{ competitor.competitor_name }}',
+      'tractor_name': '{{ competitor.tractor_name }}',
+      'weight': '{{ competitor.weight }}',
+      'pull_factor': '{{ competitor.pull_factor }}',
+      'class_no': '{{ competitor.clasS.id }}'
+    };
+  {% endfor %}
+
+  window.results = [];
+  {% for result in results %}
+    window.results.push({
+      'competitor_no': '{{ result.competitor.competitor_no }}',
+      'competitor_name': '{{ result.competitor.competitor_name }}',
+      'class_name': '{{ result.competitor.clasS.class_name }}',
+      'weight': '{{ result.weight }}',
+      'pull_factor': '{{ result.pull_factor }}',
+      'distance': '{{ result.distance }}',
+      'run_date': '{{ result.run_date }}',
+      'run_time': '{{ result.run_time }}'
+    });
+  {% endfor %}
+
+  show_last_runs('class', 'class_name', 'Standard', 5);
+  // $("#clasS").prop('disabled', true);
+  $("#pull_factor").prop('disabled', true);
+  $('#pull_factor').val(window.classes[$('#clasS').val()]);
+}
+</script>
+{% endblock %}

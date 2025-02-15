@@ -1,0 +1,165 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block nav_bar %}
+  <!-- BEGIN Nav -->
+  <ul class="nav nav-pills">
+    <li class="nav-item">
+      <a href="{% url 'competitors:index' %}" class="nav-link">Run</a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'competitors:results' %}" class="nav-link">Results</a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'competitors:setup' %}" class="nav-link active">Setup</a>
+    </li>
+  </ul>
+  <!-- END Nav -->
+{% endblock %}
+
+{% block nav_bar_wrap %}
+  <!-- BEGIN Nav -->
+  <ul class="nav nav-pills">
+    <li class="nav-item">
+      <a href="{% url 'competitors:index' %}" class="nav-link">Run</a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'competitors:results' %}" class="nav-link">Results</a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'competitors:setup' %}" class="nav-link active">Setup</a>
+    </li>
+  </ul>
+  <!-- END Nav -->
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="portlet">
+        <div class="portlet-header portlet-header-bordered">
+          <h3 class="portlet-title">Events</h3>
+        </div>
+        <div class="portlet-body">
+          <form action="{% url 'competitors:events' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-row">
+              <!-- BEGIN Form Group -->
+              <div class="form-group col-md-8">
+                <!-- BEGIN Float Label -->
+                <div class="float-label">
+                  <input type="text" id="event_name" name="event_name" class="form-control" placeholder="Add new event">
+                  <label for="event_name">New Event</label>
+                </div>
+                <!-- END Float Label -->
+              </div>
+              <!-- END Form Group -->
+              <!-- BEGIN Form Group -->
+              <div class="form-group col-md-4">
+                <button class="btn btn-primary" type="submit">Save</button>
+              </div>
+              <!-- END Form Group -->
+            </div>
+          </form>
+          <!-- BEGIN Table -->
+          <table class="table table-bordered table-striped table-hover mb-0" id="event_table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for event in events %}
+                <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>
+                  {{ event.event_name }}
+                  <span>
+                    <a href="{% url 'competitors:delete_event' event.pk %}"><button class="btn btn-danger btn-icon float-right">
+                     <i class="fa fa-times"></i>
+                    </button></a>
+                    {% if event.status == False %}
+                    <a href="{% url 'competitors:set_current_event' event.pk %}"><button class="btn btn-info btn-icon float-right mr-2">
+                      <i class="fa fa-check"></i>
+                    </button></a>
+                    {% endif %}
+                  </span>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <!-- END Table -->
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="portlet">
+        <div class="portlet-header portlet-header-bordered">
+          <h3 class="portlet-title">Classes</h3>
+        </div>
+        <div class="portlet-body">
+          <form action="{% url 'competitors:classes' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-row">
+              <!-- BEGIN Form Group -->
+              <div class="form-group col-md-5">
+                <!-- BEGIN Float Label -->
+                <div class="float-label">
+                  <input type="text" id="class_name" name="class_name" class="form-control" placeholder="Add new class">
+                  <label for="class_name">New Class</label>
+                </div>
+                <!-- END Float Label -->
+              </div>
+              <!-- END Form Group -->
+              <!-- BEGIN Form Group -->
+              <div class="form-group col-md-5">
+                <!-- BEGIN Float Label -->
+                <div class="float-label">
+                  <input type="number" onKeyPress="if(this.value.length==2) return false;" id="pull_factor" name="pull_factor" class="form-control" placeholder="Pull Factor">
+                  <label for="pull_factor">Pull Factor</label>
+                </div>
+                <!-- END Float Label -->
+              </div>
+              <!-- END Form Group -->
+              <!-- BEGIN Form Group -->
+              <div class="form-group col-md-2">
+                <button class="btn btn-primary" type="submit">Save</button>
+              </div>
+              <!-- END Form Group -->
+            </div>
+          </form>
+          <!-- BEGIN Table -->
+          <table class="table table-bordered table-striped table-hover mb-0">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Pull Factor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for class in classes %}
+                <tr>
+                  <th scope="row">{{ forloop.counter }}</th>
+                  <td class="class_name">{{ class.class_name }}</td>
+                  <td>
+                    <input type="number" onKeyPress="if(this.value.length==2) return false;" style="width: 40px; background: transparent; border: none; color: gray;" value="{{class.pull_factor}}" class="pull_factor">
+                    <a href="{% url 'competitors:delete_class' class.pk %}"><button class="btn btn-danger btn-icon float-right">
+                      <i class="fa fa-times"></i>
+                    </button></a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <!-- END Table -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="{% static 'assets/js/setup.js' %}"></script>
+{% endblock %}

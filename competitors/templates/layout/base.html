@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&amp;family=Roboto+Mono&amp;display=swap" rel="stylesheet">
+	<link href="{% static 'assets/build/styles/ltr-core.css' %}" rel="stylesheet">
+	<link href="{% static 'assets/build/styles/ltr-vendor.css' %}" rel="stylesheet">
+	<link href="{% static 'assets/build/styles/ltr-dashboard8.css' %}" rel="stylesheet">
+	<link href="{% static 'assets/images/favicon.ico' %}" rel="shortcut icon" type="image/x-icon">
+	<script type="text/javascript" src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+	<title>Tractorpull</title>
+</head>
+
+<body class="theme-light preload-active aside-active">
+	<!-- BEGIN Preload -->
+	<div class="preload">
+		<div class="preload-dialog">
+			<!-- BEGIN Spinner -->
+			<div class="spinner-border text-primary preload-spinner"></div>
+			<!-- END Spinner -->
+		</div>
+	</div>
+	<!-- END Preload -->
+	<!-- BEGIN Page Holder -->
+	<div class="holder">
+		<!-- BEGIN Page Wrapper -->
+		<div class="wrapper" style="padding-right: 0;">
+			<!-- BEGIN Header -->
+			<div class="header">
+				<!-- BEGIN Header Holder -->
+				<div class="header-holder header-holder-desktop">
+					<div class="header-container container-fluid">
+						<div class="header-wrap">
+							<h4 class="header-brand">Tractorpull&nbsp;-&nbsp;</h4>
+							<h4 class="header-brand text-primary">{{ current_event.event_name }}</h4>
+						</div>
+						<i class="header-divider"></i>
+						<div class="header-wrap header-wrap-block justify-content-start">
+              {% block nav_bar %}
+              {% endblock %}
+						</div>
+					</div>
+				</div>
+				<!-- END Header Holder -->
+				<!-- BEGIN Header Holder -->
+				<div class="header-holder header-holder-mobile">
+					<div class="header-container container-fluid">
+						<div class="header-wrap header-wrap-block justify-content-start">
+							<h4 class="header-brand">Tractorpull&nbsp;-&nbsp;</h4>
+							<h4 class="header-brand text-primary">{{ current_event.event_name }}</h4>
+						</div>
+						{% block nav_bar_wrap %}
+            {% endblock %}
+					</div>
+				</div>
+				<!-- END Header Holder -->
+			</div>
+			<!-- END Header -->
+			<!-- BEGIN Page Content -->
+			<div class="content">
+        {% block content %}
+        {% endblock %}
+			</div>
+			<!-- END Page Content -->
+			<!-- BEGIN Footer -->
+			<div class="footer">
+				<div class="footer-inner">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-sm-6 text-center text-sm-left mb-3 mb-sm-0">
+								<p class="mb-0"><i class="far fa-copyright"></i> <span id="copyright-year"></span> Tractorpull. All rights reserved</p>
+							</div>
+							<div class="col-sm-6 text-center text-sm-right">
+								<a href="#" class="mx-2">Terms</a>
+								<a href="#" class="mx-2">Privacy</a>
+								<a href="#" class="mx-2">Help</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- END Footer -->
+		</div>
+		<!-- END Page Wrapper -->
+	</div>
+	<!-- END Page Holder -->
+
+	<script type="text/javascript" src="{% static 'assets/build/scripts/mandatory.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/build/scripts/core.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/build/scripts/vendor.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/build/scripts/dashboard8.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/app/dashboard8/home.js' %}"></script>
+  <script type="text/javascript" src="{% static 'assets/app/dashboard8/datatable/extension/buttons.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/app/dashboard8/elements/toastr.js' %}"></script>
+</body>
+</html>

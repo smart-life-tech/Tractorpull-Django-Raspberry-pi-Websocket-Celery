@@ -1,0 +1,80 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block nav_bar %}
+  <!-- BEGIN Nav -->
+  <ul class="nav nav-pills">
+    <li class="nav-item">
+      <a href="{% url 'competitors:index' %}" class="nav-link">Run</a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'competitors:results' %}" class="nav-link active">Results</a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'competitors:setup' %}" class="nav-link">Setup</a>
+    </li>
+  </ul>
+  <!-- END Nav -->
+{% endblock %}
+
+{% block nav_bar_wrap %}
+  <!-- BEGIN Nav -->
+  <ul class="nav nav-pills">
+    <li class="nav-item">
+      <a href="{% url 'competitors:index' %}" class="nav-link">Run</a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'competitors:results' %}" class="nav-link active">Results</a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'competitors:setup' %}" class="nav-link">Setup</a>
+    </li>
+  </ul>
+  <!-- END Nav -->
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="portlet">
+    <div class="portlet-header portlet-header-bordered">
+      <h3 class="portlet-title">Competition Results</h3>
+    </div>
+    <div class="portlet-body">
+      <!-- BEGIN Table -->
+      <div class="portlet-body">
+        <!-- BEGIN Datatable -->
+        <table id="datatable-1" class="table table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Competitior Name</th>
+                    <th>Event Name</th>
+                    <th>Pull Factor</th>
+                    <th>Weight</th>
+                    <th>Distance</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                    <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ result.competitor.competitor_name }}</td>
+                    <td>{{ result.event_name }}</td>
+                    <td>{{ result.pull_factor }}</td>
+                    <td>{{ result.weight }}</td>
+                    <td>{{ result.distance }}</td>
+                    <td>{{ result.run_date }}</td>
+                    <td>{{ result.run_time }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- END Datatable -->
+      </div>
+      <!-- END Table -->
+    </div>
+  </div>
+</div>
+{% endblock %}
