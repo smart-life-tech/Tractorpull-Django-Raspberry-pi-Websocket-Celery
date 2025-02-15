@@ -14,6 +14,9 @@ Create a virtualenv using Python 3 and install dependencies. I recommend using [
 to be the actual path to python3 on your system.
 
     pip install -r requirements.txt
+    or
+    pip install --use-deprecated=legacy-resolver -r requirements.txt
+
   
 Run celery:
 
