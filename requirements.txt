@@ -1,7 +1,7 @@
 aioredis==2.0.1
 amqp==5.1.1
 asgi-redis==1.4.3
-asgiref==3.4.1
+asgiref==1.1.2
 async-timeout==4.0.3
 attrs==23.1.0
 autobahn
@@ -51,7 +51,7 @@ pyserial==3.5
 python-dateutil==2.8.2
 pytz==2023.3
 PyYAML==6.0.1
-redis==5.0.0
+redis==2.10.6
 requests==2.31.0
 requests-unixsocket==0.3.0
 rsa==4.9
