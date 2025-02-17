@@ -1,0 +1,11 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Users/USER/AppData/Local/Programs/Python/Python38/Lib/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineSystem.cmake:211 (message)"
+      - "CMakeLists.txt:3 (PROJECT)"
+    message: |
+      The system is: Windows - 10.0.19045 - AMD64
+...
