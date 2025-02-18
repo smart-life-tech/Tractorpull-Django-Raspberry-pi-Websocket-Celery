@@ -24,7 +24,7 @@ class Competitor(models.Model):
 class Result(models.Model):
     competitor = models.ForeignKey(Competitor, on_delete=models.CASCADE)
     weight = models.IntegerField(default=0)
-    pull_factor = models.IntegerField(default=85)
+    pull_factor = models.IntegerField() ###
     distance = models.FloatField()
     run_date = models.DateField('date run')
     run_time = models.TimeField('time run')

@@ -115,10 +115,11 @@
                                   <label for="clasS" class="col-sm-3 col-form-label col-form-label-lg">Class</label>
                                   <div class="col-sm-9">
                                     <select class="form-control form-control-lg" id="clasS" name="clasS" onchange="onClassNameChange(this)">
+                                      <option value="" selected disabled>-- Select Class --</option>
                                       {% for class in classes %}
-                                        <option value="{{ class.class_name }}">{{ class.class_name }}</option>
+                                          <option value="{{ class.class_name }}" {% if class.class_name == competitor.clasS.class_name %}selected{% endif %}>{{ class.class_name }}</option>
                                       {% endfor %}
-                                    </select>
+                                  </select>
                                   </div>
                                 </div>
                                 <!-- END Form Group -->
@@ -430,7 +431,14 @@ window.onload = function() {
   show_last_runs('class', 'class_name', 'Standard', 5);
   // $("#clasS").prop('disabled', true);
   $("#pull_factor").prop('disabled', true);
-  $('#pull_factor').val(window.classes[$('#clasS').val()]);
+  
+  let selectedClass = $('#clasS').val();
+  if (selectedClass) {
+    $('#pull_factor').val(window.classes[selectedClass]);
+  } else {
+    $('#pull_factor').val('');
+  }
+
 }
 </script>
 {% endblock %}

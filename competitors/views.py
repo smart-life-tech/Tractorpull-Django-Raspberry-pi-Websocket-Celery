@@ -11,10 +11,28 @@ import time
 import glob
 import serial
 
+import csv
+from django.http import HttpResponse
+
 # uri: 'competitors/
 # action: redirect to 'competitors/run'
 def index(request):
   return redirect('competitors:run')
+
+def export_results(request):
+    current_event = Event.objects.get(status=True)
+    results = Result.objects.filter(event_name=current_event.event_name)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="results.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Competitor No', 'Name', 'Weight', 'Distance', 'Date', 'Time', 'Pull Factor'])
+    
+    for result in results:
+        writer.writerow([result.competitor.competitor_no, result.competitor.competitor_name, result.weight, result.distance, result.run_date, result.run_time, result.pull_factor])
+
+    return response
 
 
 # uri: 'competitors/run'
@@ -95,28 +113,59 @@ def send_msg_to_screen(request):
   send_msg_to_screen_task.delay(request.POST.get('msg'))
   return HttpResponse('success')
 
+# @csrf_exempt
+# def save_competitor(request):
+#   no = request.POST.get('competitor_no')
+#   if Competitor.objects.filter(competitor_no=no, event=Event.objects.get(status=True)):
+#     competitor = Competitor.objects.get(competitor_no=no, event=Event.objects.get(status=True))
+#   else:
+#     competitor = Competitor()
+#   competitor.competitor_no = request.POST.get('competitor_no')
+#   competitor.competitor_name = request.POST.get('competitor_name')
+#   competitor.tractor_name = request.POST.get('tractor_name')
+#   competitor.weight = request.POST.get('competitor_weight')
+#   competitor.clasS = Class.objects.get(class_name=request.POST.get('clasS'))
+#   competitor.pull_factor = request.POST.get('pull_factor')
+#   competitor.event = Event.objects.get(status=True)
+#   competitor.save()
+
+#   c = Class.objects.get(class_name=request.POST.get('clasS'))
+#   if not c.pull_factor == competitor.pull_factor:
+#     c.pull_factor = competitor.pull_factor
+#     c.save()
+
+#   return HttpResponse('success!')
+
 @csrf_exempt
 def save_competitor(request):
-  no = request.POST.get('competitor_no')
-  if Competitor.objects.filter(competitor_no=no, event=Event.objects.get(status=True)):
-    competitor = Competitor.objects.get(competitor_no=no, event=Event.objects.get(status=True))
-  else:
-    competitor = Competitor()
-  competitor.competitor_no = request.POST.get('competitor_no')
-  competitor.competitor_name = request.POST.get('competitor_name')
-  competitor.tractor_name = request.POST.get('tractor_name')
-  competitor.weight = request.POST.get('competitor_weight')
-  competitor.clasS = Class.objects.get(class_name=request.POST.get('clasS'))
-  competitor.pull_factor = request.POST.get('pull_factor')
-  competitor.event = Event.objects.get(status=True)
-  competitor.save()
+    no = request.POST.get('competitor_no')
+    current_event = Event.objects.get(status=True)
+    
+    competitor, created = Competitor.objects.get_or_create(
+        competitor_no=no,
+        event=current_event,
+        defaults={
+            'competitor_name': request.POST.get('competitor_name'),
+            'tractor_name': request.POST.get('tractor_name'),
+            'weight': request.POST.get('competitor_weight'),
+            'clasS': Class.objects.get(class_name=request.POST.get('clasS')),
+            'pull_factor': request.POST.get('pull_factor')
+        }
+    )
+    
+    if not created:
+        # Update only if the class is changed
+        if competitor.clasS.class_name != request.POST.get('clasS'):
+            competitor.clasS = Class.objects.get(class_name=request.POST.get('clasS'))
+        
+        # Update pull factor only if it has changed
+        if competitor.pull_factor != request.POST.get('pull_factor'):
+            competitor.pull_factor = request.POST.get('pull_factor')
+        
+        competitor.save()
 
-  c = Class.objects.get(class_name=request.POST.get('clasS'))
-  if not c.pull_factor == competitor.pull_factor:
-    c.pull_factor = competitor.pull_factor
-    c.save()
-
-  return HttpResponse('success!')
+    return HttpResponse('success!')
+  
 
 @csrf_exempt
 def save_result(request):

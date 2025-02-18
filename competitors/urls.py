@@ -24,4 +24,5 @@ urlpatterns = [
     path('events/', event.index, name='events'),
     path('events/delete/<int:id>/', event.delete, name="delete_event"),
     path('events/<int:id>/', event.set_current_event, name="set_current_event"),
+    path('results/export/', views.export_results, name='export_results'),
 ]
