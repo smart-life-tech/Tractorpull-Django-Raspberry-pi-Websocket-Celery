@@ -35,16 +35,29 @@
 
 {% block content %}
 <div class="container-fluid">
+  <!-- export result -->
+      <div class="col-md-4">
+        <div class="card p-3">
+          <h5 class="mb-3">Export Competition Results</h5>
+          <form action="{% url 'competitors:export_results' %}" method="GET">
+            <label for="event_id">Select Event:</label>
+            <select name="event_id" id="event_id" class="form-control mb-2">
+              <option value="" selected disabled>-- Select Event --</option>
+                {% for event in events %}
+                    <option value="{{ event.id }}">{{ event.event_name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-success w-100">Export Results</button>
+          </form>
+        </div>
+      </div>
+      <br>
+
   <div class="portlet">
     <div class="portlet-header portlet-header-bordered">
       <h3 class="portlet-title">Competition Results</h3>
     </div>
     <div class="portlet-body">
-      <!-- Add this button in results.html -->
-      <form action="{% url 'competitors:export_results' %}" method="GET">
-        <button type="submit" class="btn btn-primary">Export Results</button>
-      </form>
-      <br>
       <!-- BEGIN Table -->
       <div class="portlet-body">
         <!-- BEGIN Datatable -->

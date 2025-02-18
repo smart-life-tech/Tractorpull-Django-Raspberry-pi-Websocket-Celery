@@ -20,18 +20,30 @@ def index(request):
   return redirect('competitors:run')
 
 def export_results(request):
-    current_event = Event.objects.get(status=True)
-    results = Result.objects.filter(event_name=current_event.event_name)
+    event_id = request.GET.get('event_id')
+    if event_id:
+        event = Event.objects.get(id=event_id)
+        results = Result.objects.filter(event_name=event.event_name)
+    else:
+        return HttpResponse("No event selected", status=400)
 
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="results.csv"'
-
+    response['Content-Disposition'] = f'attachment; filename="results_{event.event_name}.csv"'
+    
     writer = csv.writer(response)
     writer.writerow(['Competitor No', 'Name', 'Weight', 'Distance', 'Date', 'Time', 'Pull Factor'])
     
     for result in results:
-        writer.writerow([result.competitor.competitor_no, result.competitor.competitor_name, result.weight, result.distance, result.run_date, result.run_time, result.pull_factor])
-
+        writer.writerow([
+            result.competitor.competitor_no,
+            result.competitor.competitor_name,
+            result.weight,
+            result.distance,
+            result.run_date,
+            result.run_time,
+            result.pull_factor
+        ])
+    
     return response
 
 
@@ -71,13 +83,15 @@ def run(request):
 # uri: 'competitors/results'
 # action: show the competition results
 def results(request):
-  results = Result.objects.all()
-  current_event = Event.objects.get(status=True)
-
-  return render(request, 'components/results.html', {
-    'results': results,
-    'current_event': current_event
-  })
+    results = Result.objects.all()
+    current_event = Event.objects.get(status=True)
+    events = Event.objects.all().values('id', 'event_name').distinct()
+    
+    return render(request, 'components/results.html', {
+        'results': results,
+        'current_event': current_event,
+        'events': events
+    })
 
 # uri: 'competitors/setup'
 # action: edit class and event
