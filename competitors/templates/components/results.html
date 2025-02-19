@@ -36,21 +36,35 @@
 {% block content %}
 <div class="container-fluid">
   <!-- export result -->
-      <div class="col-md-4">
-        <div class="card p-3">
-          <h5 class="mb-3">Export Competition Results</h5>
-          <form action="{% url 'competitors:export_results' %}" method="GET">
+    <div class="card p-3">
+      <h5 class="mb-3">Export Competition Results</h5>
+      <form action="{% url 'competitors:export_results' %}" method="GET">
+        <div class="row">
+          <div class="col-4">
             <label for="event_id">Select Event:</label>
-            <select name="event_id" id="event_id" class="form-control mb-2">
+            <select name="event_id" id="event_id" class="form-control">
               <option value="" selected disabled>-- Select Event --</option>
                 {% for event in events %}
                     <option value="{{ event.id }}">{{ event.event_name }}</option>
                 {% endfor %}
             </select>
-            <button type="submit" class="btn btn-success w-100">Export Results</button>
-          </form>
+          </div>
+
+          <div class="col-4">
+            <label for="format">Select Format:</label>
+            <select name="format" id="format" class="form-control">
+                <option value="pdf">PDF</option>
+                <option value="csv">CSV/Excel</option>
+            </select>
+          </div>
+
+          <div class="col-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-success w-100">Download</button>
+          </div>
         </div>
-      </div>
+      </form>
+</div>
+  
       <br>
 
   <div class="portlet">
