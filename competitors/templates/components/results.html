@@ -38,31 +38,38 @@
   <!-- export result -->
     <div class="card p-3">
       <h5 class="mb-3">Export Competition Results</h5>
-      <form action="{% url 'competitors:export_results' %}" method="GET">
+      <form id="resultsForm" action="{% url 'competitors:results' %}" method="GET">
+        <input type="hidden" name="export" id="exportField" value="0">
         <div class="row">
           <div class="col-4">
             <label for="event_id">Select Event:</label>
-            <select name="event_id" id="event_id" class="form-control">
-              <option value="" selected disabled>-- Select Event --</option>
-                {% for event in events %}
-                    <option value="{{ event.id }}">{{ event.event_name }}</option>
-                {% endfor %}
+            <select name="event_id" id="event_id" class="form-control" onchange="this.form.submit()">
+              <option value="" selected>-- All Events --</option>
+              {% for event in events %}
+                <option value="{{ event.id }}" {% if event.id|stringformat:"s" == request.GET.event_id %}selected{% endif %}>
+                  {{ event.event_name }}
+                </option>
+              {% endfor %}
             </select>
           </div>
-
-          <div class="col-4">
-            <label for="format">Select Format:</label>
-            <select name="format" id="format" class="form-control">
+      
+          {% comment %} <div class="col-4"> 
+              <label for="format">Select Format:</label>
+              <select name="format" id="format" class="form-control">
                 <option value="pdf">PDF</option>
                 <option value="csv">CSV/Excel</option>
-            </select>
-          </div>
-
-          <div class="col-4 d-flex align-items-end">
-            <button type="submit" class="btn btn-success w-100">Download</button>
-          </div>
+              </select>
+            </div>
+        
+            <div class="col-4 d-flex align-items-end">
+              <button type="submit" class="btn btn-success w-100" onclick="alert("yes")">
+                Download
+              </button>
+            </div>
+          {% endcomment %}
         </div>
       </form>
+      
 </div>
   
       <br>
@@ -89,8 +96,9 @@
                 </tr>
             </thead>
             <tbody>
+              {% if results %}
                 {% for result in results %}
-                    <tr>
+                  <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ result.competitor.competitor_name }}</td>
                     <td>{{ result.event_name }}</td>
@@ -99,9 +107,15 @@
                     <td>{{ result.distance }}</td>
                     <td>{{ result.run_date }}</td>
                     <td>{{ result.run_time }}</td>
-                </tr>
+                  </tr>
                 {% endfor %}
+              {% else %}
+                <tr>
+                  <td colspan="8" class="text-center">No results found for this event.</td>
+                </tr>
+              {% endif %}
             </tbody>
+            
         </table>
         <!-- END Datatable -->
       </div>

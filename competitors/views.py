@@ -13,12 +13,15 @@ import serial
 
 import csv
 from django.http import HttpResponse
+
+# below library is for the export option in competitors/result
 import io
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
+# ----------------end -------------------------------------
 
 
 # uri: 'competitors/
@@ -26,81 +29,83 @@ from reportlab.lib.styles import getSampleStyleSheet
 def index(request):
   return redirect('competitors:run')
 
-
-def export_results(request):
-    event_id = request.GET.get('event_id')
-    export_format = request.GET.get('format', 'csv')
+# Export to csv and pdf commented out to allow for the 
+# initial download options to work
+# REMEMBER TO UNCOMMENT PATH IN URLS.PY
+# def export_results(request):
+#     event_id = request.GET.get('event_id')
+#     export_format = request.GET.get('format', 'csv')
     
-    if event_id:
-        event = Event.objects.get(id=event_id)
-        results = Result.objects.filter(event_name=event.event_name)
-    else:
-        return HttpResponse("No event selected", status=400)
+#     if event_id:
+#         event = Event.objects.get(id=event_id)
+#         results = Result.objects.filter(event_name=event.event_name)
+#     else:
+#         return HttpResponse("No event selected", status=400)
     
-    if export_format == 'pdf':
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="results_{event.event_name}.pdf"'
+#     if export_format == 'pdf':
+#         response = HttpResponse(content_type='application/pdf')
+#         response['Content-Disposition'] = f'attachment; filename="results_{event.event_name}.pdf"'
         
-        buffer = io.BytesIO()
-        doc = SimpleDocTemplate(buffer, pagesize=letter, title=f"Competition Results - {event.event_name}")
-        elements = []
-        styles = getSampleStyleSheet()
+#         buffer = io.BytesIO()
+#         doc = SimpleDocTemplate(buffer, pagesize=letter, title=f"Competition Results - {event.event_name}")
+#         elements = []
+#         styles = getSampleStyleSheet()
         
-        title = Paragraph(f"<b>Competition Results - {event.event_name}</b>", styles['Title'])
-        elements.append(title)
-        elements.append(Spacer(1, 12))
+#         title = Paragraph(f"<b>Competition Results - {event.event_name}</b>", styles['Title'])
+#         elements.append(title)
+#         elements.append(Spacer(1, 12))
         
-        data = [['#', 'Competitor No', 'Name', 'Weight', 'Distance', 'Date', 'Time', 'Pull Factor']]
+#         data = [['#', 'Competitor No', 'Name', 'Weight', 'Distance', 'Date', 'Time', 'Pull Factor']]
         
-        for idx, result in enumerate(results, start=1):
-            data.append([
-                str(idx),
-                str(result.competitor.competitor_no),
-                result.competitor.competitor_name,
-                str(result.weight),
-                str(result.distance),
-                str(result.run_date),
-                str(result.run_time),
-                str(result.pull_factor)
-            ])
+#         for idx, result in enumerate(results, start=1):
+#             data.append([
+#                 str(idx),
+#                 str(result.competitor.competitor_no),
+#                 result.competitor.competitor_name,
+#                 str(result.weight),
+#                 str(result.distance),
+#                 str(result.run_date),
+#                 str(result.run_time),
+#                 str(result.pull_factor)
+#             ])
         
-        table = Table(data, repeatRows=1)
-        table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black)
-        ]))
+#         table = Table(data, repeatRows=1)
+#         table.setStyle(TableStyle([
+#             ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+#             ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+#             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+#             ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+#             ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+#             ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+#             ('GRID', (0, 0), (-1, -1), 1, colors.black)
+#         ]))
         
-        elements.append(table)
-        doc.build(elements)
-        buffer.seek(0)
-        response.write(buffer.read())
-        return response
+#         elements.append(table)
+#         doc.build(elements)
+#         buffer.seek(0)
+#         response.write(buffer.read())
+#         return response
     
-    # Default to CSV export
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = f'attachment; filename="results_{event.event_name}.csv"'
+#     # Default to CSV export
+#     response = HttpResponse(content_type='text/csv')
+#     response['Content-Disposition'] = f'attachment; filename="results_{event.event_name}.csv"'
     
-    writer = csv.writer(response)
-    writer.writerow(['#', 'Competitor No', 'Name', 'Weight', 'Distance', 'Date', 'Time', 'Pull Factor'])
+#     writer = csv.writer(response)
+#     writer.writerow(['#', 'Competitor No', 'Name', 'Weight', 'Distance', 'Date', 'Time', 'Pull Factor'])
     
-    for idx, result in enumerate(results, start=1):
-        writer.writerow([
-            idx,
-            result.competitor.competitor_no,
-            result.competitor.competitor_name,
-            result.weight,
-            result.distance,
-            result.run_date,
-            result.run_time,
-            result.pull_factor
-        ])
+#     for idx, result in enumerate(results, start=1):
+#         writer.writerow([
+#             idx,
+#             result.competitor.competitor_no,
+#             result.competitor.competitor_name,
+#             result.weight,
+#             result.distance,
+#             result.run_date,
+#             result.run_time,
+#             result.pull_factor
+#         ])
     
-    return response
+#     return response
 
 
 # uri: 'competitors/run'
@@ -139,15 +144,22 @@ def run(request):
 # uri: 'competitors/results'
 # action: show the competition results
 def results(request):
+    event_id = request.GET.get("event_id")  # Get selected event from URL query params          
     results = Result.objects.all()
-    current_event = Event.objects.get(status=True)
-    events = Event.objects.all().values('id', 'event_name').distinct()
     
-    return render(request, 'components/results.html', {
-        'results': results,
-        'current_event': current_event,
-        'events': events
+    if event_id:  # If an event is selected, filter results
+        results = results.filter(competitor__event_id=event_id)
+    
+    events = Event.objects.all().values("id", "event_name").distinct()
+    current_event = Event.objects.filter(status=True).first()    
+
+    return render(request, "components/results.html", {
+        "results": results,
+        "current_event": current_event,
+        "events": events,
+        "selected_event": event_id  # Pass selected event back to the template
     })
+
 
 # uri: 'competitors/setup'
 # action: edit class and event
