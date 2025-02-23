@@ -43,12 +43,12 @@
         <div class="row">
           <div class="col-4">
             <label for="event_id">Select Event:</label>
-            <select name="event_id" id="event_id" class="form-control" onchange="this.form.submit()">
+            <select name="event_name" id="event_name" class="form-control" onchange="this.form.submit()">
               <option value="" selected>-- All Events --</option>
               {% for event in events %}
-                <option value="{{ event.id }}" {% if event.id|stringformat:"s" == request.GET.event_id %}selected{% endif %}>
-                  {{ event.event_name }}
-                </option>
+                  <option value="{{ event.event_name }}" {% if event.event_name == selected_event %}selected{% endif %}>
+                      {{ event.event_name }}
+                  </option>
               {% endfor %}
             </select>
           </div>

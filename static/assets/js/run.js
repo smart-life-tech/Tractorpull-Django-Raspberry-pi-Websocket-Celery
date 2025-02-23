@@ -149,6 +149,8 @@ function onCompetitorNoChange(selectObject) {
       $('#competitor_no').val(selectedCompetitorNo);
       $('#ready_btn').prop('disabled', true);
       $('#pull_factor').prop('disabled', true);
+
+      $('#competitor-running-distance').html('');
   }
 
   // show last 3 runs for current competitor

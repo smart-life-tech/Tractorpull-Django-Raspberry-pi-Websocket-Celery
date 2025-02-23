@@ -144,11 +144,11 @@ def run(request):
 # uri: 'competitors/results'
 # action: show the competition results
 def results(request):
-    event_id = request.GET.get("event_id")  # Get selected event from URL query params          
+    event_name = request.GET.get("event_name")  # Get event name from URL query params          
     results = Result.objects.all()
     
-    if event_id:  # If an event is selected, filter results
-        results = results.filter(competitor__event_id=event_id)
+    if event_name:
+        results = results.filter(competitor__result__event_name=event_name).distinct()  
     
     events = Event.objects.all().values("id", "event_name").distinct()
     current_event = Event.objects.filter(status=True).first()    
@@ -157,7 +157,7 @@ def results(request):
         "results": results,
         "current_event": current_event,
         "events": events,
-        "selected_event": event_id  # Pass selected event back to the template
+        "selected_event": event_name  # Pass selected event back to the template
     })
 
 
@@ -223,6 +223,17 @@ def save_competitor(request):
     no = request.POST.get('competitor_no')
     current_event = Event.objects.get(status=True)
     
+    # Fetch class object
+    try:
+        selected_class = Class.objects.get(class_name=request.POST.get('clasS'))
+    except Class.DoesNotExist:
+        return HttpResponse("Error: Selected class does not exist.", status=400)
+
+    # Ensure pull_factor is set
+    pull_factor = request.POST.get('pull_factor')
+    if not pull_factor:  # If not provided, fetch from the class
+        pull_factor = selected_class.pull_factor
+
     competitor, created = Competitor.objects.get_or_create(
         competitor_no=no,
         event=current_event,
@@ -231,7 +242,7 @@ def save_competitor(request):
             'tractor_name': request.POST.get('tractor_name'),
             'weight': request.POST.get('competitor_weight'),
             'clasS': Class.objects.get(class_name=request.POST.get('clasS')),
-            'pull_factor': request.POST.get('pull_factor')
+            'pull_factor': pull_factor
         }
     )
     
@@ -258,6 +269,7 @@ def save_result(request):
   competitor = Competitor.objects.get(competitor_no=competitor_no, event=Event.objects.get(status=True))
   t = time.localtime()
   current_time = time.strftime("%H:%M:%S", t)
+  
   result = Result(
     competitor = competitor,
     weight = int(weight),
