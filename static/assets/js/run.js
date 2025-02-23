@@ -52,7 +52,8 @@ function connect() {
             
             let values = message.split(">");
             if (values.length == 1 || !values) break;
-             $('#competitor-running-distance').html(parseFloat(values[1].replace( /[^\d\.]*/g, '')));
+            if (values[1].replace( /[^\d\.]*/g, '').length == 0)  break;
+            $('#competitor-running-distance').html(parseFloat(values[1].replace( /[^\d\.]*/g, '')));
             $('#competitor-running-speed').html(parseFloat(values[3].replace(/[^\d\.]*/g, '')));
 
             let distance = parseFloat(values[1].replace(/[^\d\.]*/g, ''));
