@@ -2,10 +2,10 @@
 
 cd /home/pi/Desktop/Tractorpull-Django-Raspberry-pi-Websocket-Celery/
 
-#./redis-stable/src/redis-server &
-redis-server &
+./redis-stable/src/redis-server &
+#redis-server &
 
 sh ./start-django-server.sh &
-#sh ./start-celery.sh &
+sh ./start-celery.sh &
 
 chromium-browser http://localhost:8000/competitors/
