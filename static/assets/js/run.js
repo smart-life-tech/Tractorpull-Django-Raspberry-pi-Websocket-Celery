@@ -37,35 +37,36 @@ function connect() {
                 set_form_enabled(false);
                 break;
             case "RS232":
-            //     let values = message.split(">");
-            //     if (values.length == 1 || !values)
-            //         break;
-            //     if (values[1].replace( /[^\d\.]*/g, '').length == 0)
-            //         break;
-            //     $('#competitor-running-distance').html(parseFloat(values[1].replace( /[^\d\.]*/g, '')));
-            //     $('#competitor-running-speed').html(parseFloat(values[3].replace( /[^\d\.]*/g, '')));
-            //     let old_weight = parseFloat($('#competitor-running-weight').html());
-            //     let new_weight = parseFloat(values[4].replace( /[^\d\.]*/g, ''));
-            //     if (old_weight < new_weight)
-            //         $('#competitor-running-weight').html(new_weight);
-            //     break;
-            
-            let values = message.split(">");
-            if (values.length == 1 || !values) break;
-            if (values[1].replace( /[^\d\.]*/g, '').length == 0)  break;
-            $('#competitor-running-distance').html(parseFloat(values[1].replace( /[^\d\.]*/g, '')));
-            $('#competitor-running-speed').html(parseFloat(values[3].replace(/[^\d\.]*/g, '')));
-
-            let distance = parseFloat(values[1].replace(/[^\d\.]*/g, ''));
-            if (distance > 10) { // Ignore weight data for the first 10 meters
-         
-                let new_weight = parseFloat(values[4].replace(/[^\d\.]*/g, ''));
+                console.log(message)
+                let values = message.split(">");
+                if (values.length == 1 || !values)
+                    break;
+                if (values[1].replace( /[^\d\.]*/g, '').length == 0)
+                    break;
+                $('#competitor-running-distance').html(parseFloat(values[1].replace( /[^\d\.]*/g, '')));
+                $('#competitor-running-speed').html(parseFloat(values[3].replace( /[^\d\.]*/g, '')));
                 let old_weight = parseFloat($('#competitor-running-weight').html());
-                if (new_weight > old_weight) { // Ignore weight increases
+                let new_weight = parseFloat(values[4].replace( /[^\d\.]*/g, ''));
+                if (old_weight < new_weight)
                     $('#competitor-running-weight').html(new_weight);
-                }
-            }
-            break;
+                break;
+            
+            // let values = message.split(">");
+            // if (values.length == 1 || !values) break;
+            // if (values[1].replace( /[^\d\.]*/g, '').length == 0)  break;
+            // $('#competitor-running-distance').html(parseFloat(values[1].replace( /[^\d\.]*/g, '')));
+            // $('#competitor-running-speed').html(parseFloat(values[3].replace(/[^\d\.]*/g, '')));
+
+            // let distance = parseFloat(values[1].replace(/[^\d\.]*/g, ''));
+            // if (distance > 10) { // Ignore weight data for the first 10 meters
+         
+            //     let new_weight = parseFloat(values[4].replace(/[^\d\.]*/g, ''));
+            //     let old_weight = parseFloat($('#competitor-running-weight').html());
+            //     if (new_weight > old_weight) { // Ignore weight increases
+            //         $('#competitor-running-weight').html(new_weight);
+            //     }
+            //}
+            //break;
             default:
                 console.log("No event")
         }
