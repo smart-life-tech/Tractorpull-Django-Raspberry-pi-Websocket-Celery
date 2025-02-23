@@ -27,7 +27,7 @@ function connect() {
         data = data["payload"];
         let message = data['message'];
         let event = data["event"];
-        //console.log(data);
+        console.log(data);
         switch (event) {
             case "START":
                 break;
