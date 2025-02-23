@@ -5,8 +5,8 @@ var webSocket = new WebSocket(connectionString);
 // of websocket.
 function connect() {
     webSocket.onopen = function open() {
-        console.log('WebSockets connection created.');
-        $('#competitor-running-distance').html(parseFloat(100));
+        console.log('WebSockets connection created now.');
+        $('#competitor-running-distance').html(100);
         // on websocket open, send the START event.
         webSocket.send(JSON.stringify({
             "event": "START",
