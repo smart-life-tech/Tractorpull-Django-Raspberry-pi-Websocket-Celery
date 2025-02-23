@@ -37,7 +37,6 @@ function connect() {
                 set_form_enabled(false);
                 break;
             case "RS232":
-                console.log(message)
                 let values = message.split(">");
                 if (values.length == 1 || !values)
                     break;
@@ -50,23 +49,6 @@ function connect() {
                 if (old_weight < new_weight)
                     $('#competitor-running-weight').html(new_weight);
                 break;
-            
-            // let values = message.split(">");
-            // if (values.length == 1 || !values) break;
-            // if (values[1].replace( /[^\d\.]*/g, '').length == 0)  break;
-            // $('#competitor-running-distance').html(parseFloat(values[1].replace( /[^\d\.]*/g, '')));
-            // $('#competitor-running-speed').html(parseFloat(values[3].replace(/[^\d\.]*/g, '')));
-
-            // let distance = parseFloat(values[1].replace(/[^\d\.]*/g, ''));
-            // if (distance > 10) { // Ignore weight data for the first 10 meters
-         
-            //     let new_weight = parseFloat(values[4].replace(/[^\d\.]*/g, ''));
-            //     let old_weight = parseFloat($('#competitor-running-weight').html());
-            //     if (new_weight > old_weight) { // Ignore weight increases
-            //         $('#competitor-running-weight').html(new_weight);
-            //     }
-            //}
-            //break;
             default:
                 console.log("No event")
         }
@@ -94,66 +76,36 @@ function onClassNameChange(selectObject) {
 }
 
 // auto fill competitor info when competitor_no is inputed
-// function onCompetitorNoChange(selectObject) {
-//   selectedCompetitorNo = selectObject.value;
-
-//   // if current competitor is already exist
-//   if (window.competitors[selectedCompetitorNo]) {
-//     $('#competitor_weight').val(window.competitors[selectedCompetitorNo]['weight']);
-//     $('#competitor_name').val(window.competitors[selectedCompetitorNo]['competitor_name']);
-//     $('#tractor_name').val(window.competitors[selectedCompetitorNo]['tractor_name']);
-
-//     $('#clasS').prop('selectedIndex', parseInt(window.competitors[selectedCompetitorNo]['class_no']));
-//     if (window.connection == 'Connected')
-//       $('#ready_btn').prop('disabled', false);
-//     $('#pull_factor').val(window.competitors[selectedCompetitorNo]['pull_factor']);
-//     // $('#clasS').prop('disabled', true);
-//     $('#pull_factor').prop('disabled', false);
-//   } else {
-//     $('#competitor_weight').val('');
-//     $('#competitor_name').val('');
-//     $('#tractor_name').val('');
-//     $('#clasS').prop('selectedIndex', 0);
-//     $('#pull_factor').val('');
-//     $('#competitor_no').val(selectedCompetitorNo);
-//     $('#ready_btn').prop('disabled', true);
-//     // $('#clasS').prop('disabled', true);
-//     $('#pull_factor').prop('disabled', true);
-//     if (selectedCompetitorNo > 0) {
-//       $('#clasS').prop('disabled', false);
-//       $('#pull_factor').prop('disabled', false);
-//     }
-//     $('#pull_factor').val(window.classes[$('#clasS').val()]);
-//   }
-
-//   // show last 3 runs for current competitor
-//   show_last_runs('competitor', 'competitor_no', selectedCompetitorNo, 3);
-// }
-
 function onCompetitorNoChange(selectObject) {
   selectedCompetitorNo = selectObject.value;
 
   // if current competitor is already exist
   if (window.competitors[selectedCompetitorNo]) {
-      $('#competitor_weight').val(window.competitors[selectedCompetitorNo]['weight']);
-      $('#competitor_name').val(window.competitors[selectedCompetitorNo]['competitor_name']);
-      $('#tractor_name').val(window.competitors[selectedCompetitorNo]['tractor_name']);
-      $('#clasS').val(window.competitors[selectedCompetitorNo]['class_name']); // Populate class
-      $('#pull_factor').val(window.competitors[selectedCompetitorNo]['pull_factor']); // Populate pull factor
-      $('#ready_btn').prop('disabled', false);
-      $('#pull_factor').prop('disabled', false);
-  } else {
-      // Reset fields for new competitor
-      $('#competitor_weight').val('');
-      $('#competitor_name').val('');
-      $('#tractor_name').val('');
-      $('#clasS').prop('selectedIndex', 0);
-      $('#pull_factor').val('');
-      $('#competitor_no').val(selectedCompetitorNo);
-      $('#ready_btn').prop('disabled', true);
-      $('#pull_factor').prop('disabled', true);
+    $('#competitor_weight').val(window.competitors[selectedCompetitorNo]['weight']);
+    $('#competitor_name').val(window.competitors[selectedCompetitorNo]['competitor_name']);
+    $('#tractor_name').val(window.competitors[selectedCompetitorNo]['tractor_name']);
 
-      $('#competitor-running-distance').html('');
+    $('#clasS').prop('selectedIndex', parseInt(window.competitors[selectedCompetitorNo]['class_no']));
+    if (window.connection == 'Connected')
+      $('#ready_btn').prop('disabled', false);
+    $('#pull_factor').val(window.competitors[selectedCompetitorNo]['pull_factor']);
+    // $('#clasS').prop('disabled', true);
+    $('#pull_factor').prop('disabled', false);
+  } else {
+    $('#competitor_weight').val('');
+    $('#competitor_name').val('');
+    $('#tractor_name').val('');
+    $('#clasS').prop('selectedIndex', 0);
+    $('#pull_factor').val('');
+    $('#competitor_no').val(selectedCompetitorNo);
+    $('#ready_btn').prop('disabled', true);
+    // $('#clasS').prop('disabled', true);
+    $('#pull_factor').prop('disabled', true);
+    if (selectedCompetitorNo > 0) {
+      $('#clasS').prop('disabled', false);
+      $('#pull_factor').prop('disabled', false);
+    }
+    $('#pull_factor').val(window.classes[$('#clasS').val()]);
   }
 
   // show last 3 runs for current competitor
