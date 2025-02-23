@@ -48,7 +48,8 @@ function connect() {
                 $('#competitor-running-speed').html(parseFloat(values[3].replace( /[^\d\.]*/g, '')));
                 let old_weight = parseFloat($('#competitor-running-weight').html());
                 let new_weight = parseFloat(values[4].replace( /[^\d\.]*/g, ''));
-                if (old_weight < new_weight)
+                let distance = parseFloat(values[1].replace( /[^\d\.]*/g, ''));
+                if (old_weight < new_weight && distance > 10)
                     $('#competitor-running-weight').html(new_weight);
                 break;
             default:
