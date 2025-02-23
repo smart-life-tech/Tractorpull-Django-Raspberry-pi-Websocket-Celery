@@ -5,7 +5,7 @@ from competitors.tasks import send_ready_task, send_msg_to_screen_task
 
 from .models import Class, Event, Competitor, Result
 
-from datetime import date
+from datetime import date, datetime
 import time
 
 import glob
@@ -267,8 +267,11 @@ def save_result(request):
   pull_factor = request.POST.get('pull_factor')
   distance = request.POST.get('distance')
   competitor = Competitor.objects.get(competitor_no=competitor_no, event=Event.objects.get(status=True))
-  t = time.localtime()
-  current_time = time.strftime("%H:%M:%S", t)
+  #t = time.localtime()
+  #  current_time = time.strftime("%H:%M:%S", t)
+  t = datetime.now()
+  current_time = t.strftime("%H:%M:%S")
+
   
   result = Result(
     competitor = competitor,
