@@ -6,6 +6,7 @@ var webSocket = new WebSocket(connectionString);
 function connect() {
     webSocket.onopen = function open() {
         console.log('WebSockets connection created.');
+        $('#competitor-running-distance').html(parseFloat(100));
         // on websocket open, send the START event.
         webSocket.send(JSON.stringify({
             "event": "START",
@@ -38,6 +39,7 @@ function connect() {
                 break;
             case "RS232":
                 let values = message.split(">");
+                console.log(values);
                 if (values.length == 1 || !values)
                     break;
                 //if (values[1].replace( /[^\d\.]*/g, '').length == 0)
