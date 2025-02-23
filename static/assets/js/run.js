@@ -52,11 +52,12 @@ function connect() {
             
             let values = message.split(">");
             if (values.length == 1 || !values) break;
+            $('#competitor-running-distance').html(distance);
+            $('#competitor-running-speed').html(parseFloat(values[3].replace(/[^\d\.]*/g, '')));
 
             let distance = parseFloat(values[1].replace(/[^\d\.]*/g, ''));
             if (distance > 10) { // Ignore weight data for the first 10 meters
-                $('#competitor-running-distance').html(distance);
-                $('#competitor-running-speed').html(parseFloat(values[3].replace(/[^\d\.]*/g, '')));
+         
                 let new_weight = parseFloat(values[4].replace(/[^\d\.]*/g, ''));
                 let old_weight = parseFloat($('#competitor-running-weight').html());
                 if (new_weight > old_weight) { // Ignore weight increases
