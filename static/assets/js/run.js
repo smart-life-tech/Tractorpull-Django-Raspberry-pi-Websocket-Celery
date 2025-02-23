@@ -40,8 +40,8 @@ function connect() {
                 let values = message.split(">");
                 if (values.length == 1 || !values)
                     break;
-                if (values[1].replace( /[^\d\.]*/g, '').length == 0)
-                    break;
+                //if (values[1].replace( /[^\d\.]*/g, '').length == 0)
+                    //break;
                 $('#competitor-running-distance').html(parseFloat(values[1].replace( /[^\d\.]*/g, '')));
                 $('#competitor-running-speed').html(parseFloat(values[3].replace( /[^\d\.]*/g, '')));
                 let old_weight = parseFloat($('#competitor-running-weight').html());
