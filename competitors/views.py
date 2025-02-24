@@ -126,7 +126,13 @@ def run(request):
     connection = 'Connected'
 
   classes = Class.objects.all()
-  results = Result.objects.filter(event_name=Event.objects.get(status=True).event_name).all()
+  try:
+    current_event = Event.objects.get(status=True)
+  except Event.DoesNotExist:
+    # Use the first event on the list as the default if the current event is not available
+    current_event = Event.objects.first()
+  results = Result.objects.filter(event_name=current_event.event_name).all()
+  #results = Result.objects.filter(event_name=Event.objects.get(status=True).event_name).all()
   current_event = Event.objects.get(status=True)
   competitors = Competitor.objects.filter(event=current_event).all()
 
