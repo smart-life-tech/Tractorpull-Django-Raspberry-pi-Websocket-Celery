@@ -18,7 +18,13 @@ def delete(request, id):
     return redirect('competitors:setup')
 
 def set_current_event(request, id):
-    old = Event.objects.get(status=True)
+    try:
+        current_event = Event.objects.get(status=True)
+    except Event.DoesNotExist:
+        # Use the first event on the list as the default if the current event is not available
+        current_event = Event.objects.first()
+    #old = Event.objects.get(status=True)
+    old = current_event
     if not old.id == id:
         old.status = False
         current = Event.objects.get(id=id)
