@@ -133,7 +133,7 @@ def run(request):
     current_event = Event.objects.first()
   results = Result.objects.filter(event_name=current_event.event_name).all()
   #results = Result.objects.filter(event_name=Event.objects.get(status=True).event_name).all()
-  current_event = Event.objects.get(status=True)
+  #current_event = Event.objects.get(status=True)
   competitors = Competitor.objects.filter(event=current_event).all()
 
   for competitor in competitors:
