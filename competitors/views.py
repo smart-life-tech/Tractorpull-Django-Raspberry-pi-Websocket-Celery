@@ -166,7 +166,12 @@ def results(request):
 def setup(request):
   classes = Class.objects.all()
   events = Event.objects.all()
-  current_event = Event.objects.get(status=True)
+  #current_event = Event.objects.get(status=True)
+  try:
+    current_event = Event.objects.get(status=True)
+  except Event.DoesNotExist:
+    # Use the first event on the list as the default if the current event is not available
+    current_event = Event.objects.first()
 
   return render(request, 'components/setup.html', {
     'classes': classes,
